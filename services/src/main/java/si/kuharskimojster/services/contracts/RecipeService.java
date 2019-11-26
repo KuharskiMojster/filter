@@ -2,11 +2,10 @@ package si.kuharskimojster.services.contracts;
 
 import si.kuharskimojster.entities.RecipeEntity;
 
-import javax.persistence.NoResultException;
-import java.util.Collection;
+import java.util.List;
 
 public interface RecipeService {
-        Collection<RecipeEntity> getAllRecipes();
+        List<RecipeEntity> getAllRecipes();
 
 
 

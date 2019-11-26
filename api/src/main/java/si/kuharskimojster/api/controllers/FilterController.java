@@ -1,8 +1,6 @@
 package si.kuharskimojster.api.controllers;
 
 
-import com.sun.istack.Nullable;
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +16,7 @@ import si.kuharskimojster.utils.Difficulty;
 import si.kuharskimojster.utils.Meal;
 import si.kuharskimojster.utils.TypeOfMeal;
 
-import javax.persistence.EntityManager;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,26 +26,24 @@ import java.util.stream.Collectors;
 @RequestMapping("/v1")
 public class FilterController {
 
-    @Autowired
-    private EntityManager entityManager;
 
     @Autowired
     RecipeService recipeService;
 
 
-    @GetMapping("/filter")
-    public ResponseEntity<ResponseModel> filter(@RequestParam("minTime") Integer minTime,
-                                                @RequestParam("maxTime") Integer maxTime,
-                                                @RequestParam("minQuantity") Integer minQuantity,
-                                                @RequestParam("maxQuantity") Integer maxQuantity,
-                                                @RequestParam("minCalories") Integer minCalories,
-                                                @RequestParam("maxCalories") Integer maxCalories,
-                                                @RequestParam("allergens") List<Allergen> allergenList,
-                                                @RequestParam("difficulty") Difficulty difficulty,
-                                                @RequestParam("meal") Meal meal,
-                                                @RequestParam("typeOfMeal") TypeOfMeal typeOfMeal) {
+    @GetMapping("/recipes/filter")
+    public ResponseEntity<ResponseModel> filter(@RequestParam(value = "minTime", required = false) Integer minTime,
+                                                @RequestParam(value = "maxTime", required = false) Integer maxTime,
+                                                @RequestParam(value = "minQuantity", required = false) Integer minQuantity,
+                                                @RequestParam(value = "maxQuantity", required = false) Integer maxQuantity,
+                                                @RequestParam(value = "minCalories", required = false) Integer minCalories,
+                                                @RequestParam(value = "maxCalories", required = false) Integer maxCalories,
+                                                @RequestParam(value = "allergens", required = false) List<Allergen> allergenList,
+                                                @RequestParam(value = "difficulty", required = false) Difficulty difficulty,
+                                                @RequestParam(value = "meal", required = false) Meal meal,
+                                                @RequestParam(value = "typeOfMeal", required = false) TypeOfMeal typeOfMeal) {
 
-        List<RecipeEntity> recipes = (List<RecipeEntity>) recipeService.getAllRecipes();
+        List<RecipeEntity> recipes = recipeService.getAllRecipes();
 
         if (minTime != null && maxTime != null) {
             recipes = recipes.stream().filter(recipe -> minTime <= recipe.getTime() && recipe.getTime() <= maxTime).collect(Collectors.toList());
@@ -58,26 +54,31 @@ public class FilterController {
         }
 
         if (minCalories != null && maxCalories != null) {
-            recipes = recipes.stream().filter(recipe -> minCalories <= recipe.getQuantity() && recipe.getQuantity() <= maxCalories).collect(Collectors.toList());
+            recipes = recipes.stream().filter(recipe -> minCalories <= recipe.getCalories() && recipe.getCalories() <= maxCalories).collect(Collectors.toList());
         }
 
         if (allergenList != null) {
             recipes = recipes.stream().filter(recipeEntity -> Collections.disjoint(recipeEntity.getAllergens(), allergenList)).collect(Collectors.toList());
         }
 
-        if (difficulty != null){
+        if (difficulty != null) {
             recipes = recipes.stream().filter(recipe -> difficulty.equals(recipe.getDifficulty())).collect(Collectors.toList());
         }
 
-        if (meal != null){
+        if (meal != null) {
             recipes = recipes.stream().filter(recipe -> meal.equals(recipe.getMeal())).collect(Collectors.toList());
         }
 
-        if (typeOfMeal != null){
+        if (typeOfMeal != null) {
             recipes = recipes.stream().filter(recipe -> typeOfMeal.equals(recipe.getTypeOfMeal())).collect(Collectors.toList());
         }
 
         return new ResponseEntity<>(new ResponseModel(recipes, HttpStatus.OK.value()), HttpStatus.OK);
+    }
+
+    @GetMapping("/test")
+    public List<RecipeEntity> get() {
+        return recipeService.getAllRecipes();
     }
 
 

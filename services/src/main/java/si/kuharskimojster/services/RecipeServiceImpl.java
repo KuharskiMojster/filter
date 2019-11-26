@@ -6,8 +6,7 @@ import si.kuharskimojster.entities.RecipeEntity;
 import si.kuharskimojster.repositories.RecipeRepository;
 import si.kuharskimojster.services.contracts.RecipeService;
 
-import javax.persistence.NoResultException;
-import java.util.Collection;
+import java.util.List;
 
 @Service
 public class RecipeServiceImpl implements RecipeService {
@@ -16,7 +15,7 @@ public class RecipeServiceImpl implements RecipeService {
     RecipeRepository recipeRepository;
 
     @Override
-    public Collection<RecipeEntity> getAllRecipes() {
+    public List<RecipeEntity> getAllRecipes() {
         return recipeRepository.findAll();
     }
 

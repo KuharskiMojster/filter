@@ -25,17 +25,17 @@ public class RecipeEntity {
     private String title;
 
     @Column(name="time", nullable = false)
-    private Integer time;
+    private int time;
 
     @Column(name="quantity")
-    private Integer quantity;
+    private int quantity;
 
     @Column(name="instructions", nullable = false)
     @Type(type="text")
     private String instructions;
 
     @Column(name="calories")
-    private Integer calories;
+    private int calories;
 
     @Column(name="tags")
     private String tags;
