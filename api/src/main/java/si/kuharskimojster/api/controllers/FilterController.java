@@ -76,10 +76,5 @@ public class FilterController {
         return new ResponseEntity<>(new ResponseModel(recipes, HttpStatus.OK.value()), HttpStatus.OK);
     }
 
-    @GetMapping("/test")
-    public List<RecipeEntity> get() {
-        return recipeService.getAllRecipes();
-    }
-
 
 }
