@@ -13,5 +13,5 @@ script:
 after_script:
 - docker images
 after_success:
-- echo "$REGISTRY_PASS" | docker login -u "$DOCKER_USERNAME" --password-stdin
+- echo "$REGISTRY_PASS" | docker login -u "$REGISTRY_USER" --password-stdin
 - docker push "$DOCKER_IMAGE"
