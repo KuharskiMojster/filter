@@ -1,0 +1,19 @@
+sudo: required
+services:
+- docker
+language: java
+env:
+  global:
+  - REGISTRY_USER=rsosem
+  - DOCKER_IMAGE=filter:1.0.0-SNAPSHOT-$TRAVIS_JOB_NUMBER
+  - DOCKER_IMAGE_FULL_PATH=kuharskimojster/filter
+  - secure: "dNYolLeRq//LiDjY4HsyvOoTPuK4XrneGbZ5X0uMIb8sB1MqjA4PO+LrPuendv91EPQm/SchYI2JeNnrPs6eTxBkqroCljXn1q+5Yh4i2UqjJIZuJY/xUBEqYgWl0lDtFQKuarq0mkUdN0HLaGWuVzOIELeK79YiSFa/YljVvAQPX4Mgz385Z+Qp/WewvF3fuaYk6N6Dxiy4dhTvQa4vfp7ttZ9Ai5XsPYkwCwtFlU7HxO9obZKl3uev3Yv8pftOFz+tF3iJRiE3/L9mhVqd2AzyHNVoWg9cpKgEergnmtAVEwcpW9TpJkq71zL+AHbblquOF620fqcOnSaS+8BEdFZzUdlOfa75+p2pY9EAHyh5Q6neNrd8nHUhcp31dDCE8p4ldjFcuNyqbyGI6f/kA3M4gWOc77ulxid7WKLfMtUeU1orNLgrDF6N0UFqsZOX095Hepayspv+Jmqp3VFRVd4Dex38IDNh729jXNfxxWg07LdauhVvVB2m0wBxP9v+RyAbG1OUOau+XkvIqGGvHevGvzR7Yl0lYBMflMRqA7NqogoV33q6QPM+0SUQ+mntxrWQJ98SkcwzsPS1JB7zn7iWCPcYD8sTVNuTbuflpCGArTonqaCUmqfDnhy2+/AAxxByeK8utQ947TJeq2X/YoCEuDvCEuHbAbL0tzX8cVQ="
+script:
+- mvn clean package -U
+- docker build -t "$DOCKER_IMAGE" .
+after_script:
+- docker images
+before_deploy:
+- docker login -u "$REGISTRY_USER" -p "$REGISTRY_PASS"
+after_success:
+- docker push "$DOCKER_IMAGE"
