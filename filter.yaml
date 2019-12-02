@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: recipe-filter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: recipe-filter
+  template:
+    metadata:
+      labels:
+        app: recipe-filter
+    spec:
+      containers:
+      - image: kuharskimojster/filter:1.0.0-SNAPSHOT-6.1
+        name: recipe-filter
+        env:
+        - name: -SPRING_DATASOURCE_PASSWORD
+          value: postgres
+        - name: -SPRING_DATASOURCE_URL
+          value: jdbc:postgresql://db:5432/postgres
+        - name: -SPRING_DATASOURE_USERNAME
+          value: postgres
+        ports:
+        - containerPort: 8080
+          name: filter
+          protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: recipe-filter
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 9080
+    protocol: TCP
+    targetPort: filter
+  selector:
+    app: recipe-filter
