@@ -37,7 +37,7 @@
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
-            <version>LATEST</version>
+            <version>42.3.7</version>
         </dependency>
         <dependency>
             <groupId>si.kuharskimojster</groupId>
